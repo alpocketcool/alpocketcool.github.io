@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Miłość do Porządku — Luiza Niedźwiecka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0b09;
+    --bg2: #111110;
+    --bg3: #181815;
+    --bg4: #1e1e1a;
+    --border: rgba(184,152,42,0.1);
+    --border2: rgba(184,152,42,0.2);
+    --border3: rgba(184,152,42,0.35);
+    --text: #f0ece2;
+    --text2: #d4cfc2;
+    --muted: #7a7568;
+    --muted2: #4a4840;
+    --gold: #b8982a;
+    --gold2: #d4b445;
+    --gold3: #e8cc6a;
+    --gold-bg: rgba(184,152,42,0.06);
+    --gold-bg2: rgba(184,152,42,0.1);
+    --cream: #f5f0e8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* TEXTURE */
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    background: rgba(11,11,9,0.9);
+    backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-icon {
+    width: 28px; height: 28px; opacity: 0.85;
+  }
+  .nav-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.05rem; font-weight: 400;
+    letter-spacing: 0.04em;
+    color: var(--gold2);
+  }
+  .nav-links { display: flex; gap: 2rem; align-items: center; }
+  .nav-link {
+    font-size: 0.72rem; font-weight: 300;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-link:hover { color: var(--gold2); }
+  .nav-cta {
+    font-size: 0.68rem; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 7px 18px;
+    border: 0.5px solid var(--border2);
+    color: var(--gold2); background: var(--gold-bg);
+    text-decoration: none; border-radius: 1px;
+    transition: all 0.2s;
+  }
+  .nav-cta:hover { border-color: var(--border3); background: var(--gold-bg2); color: var(--gold3); }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 2.5rem 5rem;
+    position: relative; overflow: hidden;
+  }
+
+  .hero-orb {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    filter: blur(100px);
+  }
+  .orb-1 {
+    width: 500px; height: 500px;
+    background: radial-gradient(ellipse, rgba(184,152,42,0.07) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+  .orb-2 {
+    width: 300px; height: 300px;
+    background: radial-gradient(ellipse, rgba(184,152,42,0.04) 0%, transparent 70%);
+    bottom: 50px; left: -50px;
+  }
+
+  /* Decorative line */
+  .hero-line {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 0.5px; height: 80px; margin-top: 60px;
+    background: linear-gradient(to bottom, transparent, var(--gold));
+    opacity: 0; animation: fadeIn 1s 0.8s forwards;
+  }
+
+  .hero-inner {
+    position: relative; z-index: 1;
+    max-width: 1200px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+
+  .hero-left { }
+
+  .hero-eyebrow {
+    font-size: 0.65rem; font-weight: 400;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 14px;
+    opacity: 0; animation: fadeUp 0.8s 0.3s forwards;
+  }
+  .hero-eyebrow::before {
+    content: ''; display: block;
+    width: 40px; height: 0.5px; background: var(--gold);
+  }
+
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 300; line-height: 1.05;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.15em;
+    opacity: 0; animation: fadeUp 0.9s 0.45s forwards;
+  }
+  .hero-title em {
+    font-style: italic; font-weight: 300;
+    color: var(--gold2); display: block;
+  }
+
+  .hero-desc {
+    font-size: 0.95rem; color: var(--muted);
+    max-width: 420px; margin: 2rem 0 3rem;
+    line-height: 1.8; font-weight: 300;
+    opacity: 0; animation: fadeUp 0.9s 0.6s forwards;
+  }
+
+  .hero-btns {
+    display: flex; gap: 12px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.9s 0.75s forwards;
+  }
+  .btn {
+    font-size: 0.7rem; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.9rem 2.2rem; border-radius: 1px;
+    text-decoration: none; transition: all 0.25s;
+    border: 0.5px solid; cursor: pointer; font-family: 'Jost', sans-serif;
+  }
+  .btn-gold {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: var(--bg);
+  }
+  .btn-gold:hover { background: var(--gold2); border-color: var(--gold2); }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--border2);
+    color: var(--muted);
+  }
+  .btn-outline:hover { border-color: var(--border3); color: var(--gold2); }
+
+  /* HERO RIGHT — QR + deco */
+  .hero-right {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 1.5rem;
+    opacity: 0; animation: fadeIn 1.2s 0.9s forwards;
+  }
+
+  .qr-frame {
+    position: relative;
+    padding: 1.5rem;
+    background: var(--bg2);
+    border: 0.5px solid var(--border2);
+    border-radius: 3px;
+    display: flex; flex-direction: column; align-items: center; gap: 1rem;
+  }
+  .qr-frame::before, .qr-frame::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: var(--gold);
+    border-style: solid;
+  }
+  .qr-frame::before { top: -1px; left: -1px; border-width: 1.5px 0 0 1.5px; }
+  .qr-frame::after { bottom: -1px; right: -1px; border-width: 0 1.5px 1.5px 0; }
+
+  .qr-img {
+    width: 200px; height: 200px;
+    border-radius: 2px;
+    display: block;
+  }
+
+  .qr-label {
+    font-size: 0.62rem; font-weight: 400;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted);
+    text-align: center;
+  }
+  .qr-label span { color: var(--gold); }
+
+  .hero-stat-row {
+    display: flex; gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+    border-radius: 2px; overflow: hidden;
+    width: 100%;
+  }
+  .hero-stat {
+    flex: 1; background: var(--bg2);
+    padding: 1rem; text-align: center;
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem; font-weight: 400;
+    color: var(--gold2); display: block; line-height: 1;
+  }
+  .stat-label {
+    font-size: 0.6rem; font-weight: 400;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted2); margin-top: 4px;
+  }
+
+  /* DIVIDER */
+  .divider {
+    display: flex; align-items: center; gap: 1.5rem;
+    padding: 0 2.5rem;
+    max-width: 1200px; margin: 0 auto;
+    opacity: 0.4;
+  }
+  .divider-line { flex: 1; height: 0.5px; background: var(--border2); }
+  .divider-ornament {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem; color: var(--gold);
+    letter-spacing: 0.3em;
+  }
+
+  /* SERVICES */
+  #uslugi {
+    padding: 6rem 2.5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+
+  .section-eyebrow {
+    font-size: 0.62rem; font-weight: 400;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-eyebrow::before { content: ''; display: block; width: 24px; height: 0.5px; background: var(--gold); }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 300; line-height: 1.15;
+    margin-bottom: 3rem;
+  }
+  .section-title em { font-style: italic; color: var(--gold2); }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 0.5px solid var(--border);
+    border-radius: 2px; overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--bg2);
+    padding: 2rem;
+    transition: background 0.25s;
+    position: relative; overflow: hidden;
+  }
+  .service-card::after {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 0; height: 1.5px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    transition: width 0.4s ease;
+  }
+  .service-card:hover { background: var(--bg3); }
+  .service-card:hover::after { width: 100%; }
+
+  .service-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem; font-weight: 300;
+    color: var(--border2); line-height: 1;
+    margin-bottom: 1rem; display: block;
+  }
+  .service-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem; font-weight: 400;
+    color: var(--text); margin-bottom: 0.6rem;
+  }
+  .service-desc {
+    font-size: 0.82rem; color: var(--muted); line-height: 1.7;
+  }
+  .service-price {
+    margin-top: 1.2rem;
+    font-size: 0.65rem; font-weight: 400;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* DLACZEGO MY */
+  #dlaczego {
+    padding: 5rem 2.5rem;
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .dlaczego-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: grid; grid-template-columns: 1fr 2fr;
+    gap: 4rem; align-items: start;
+  }
+  @media(max-width: 768px) { .dlaczego-inner { grid-template-columns: 1fr; gap: 2rem; } }
+
+  .features-list { display: flex; flex-direction: column; gap: 1px; }
+  .feature-row {
+    background: var(--bg3);
+    border: 0.5px solid var(--border);
+    padding: 1.3rem 1.5rem;
+    display: flex; gap: 1.2rem; align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+  .feature-row:hover { border-color: var(--border2); }
+  .feature-icon {
+    width: 32px; height: 32px; flex-shrink: 0;
+    border: 0.5px solid var(--border2);
+    border-radius: 1px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    background: var(--gold-bg);
+    margin-top: 2px;
+  }
+  .feature-name { font-size: 0.9rem; font-weight: 400; color: var(--text2); margin-bottom: 3px; }
+  .feature-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.5; }
+
+  /* KONTAKT / FORMULARZ */
+  #kontakt {
+    padding: 6rem 2.5rem;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .kontakt-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 4rem; align-items: start;
+  }
+  @media(max-width: 768px) { .kontakt-grid { grid-template-columns: 1fr; gap: 2.5rem; } }
+
+  .kontakt-left p { font-size: 0.88rem; color: var(--muted); line-height: 1.8; margin-bottom: 2rem; }
+
+  .contact-info { display: flex; flex-direction: column; gap: 12px; }
+  .contact-item {
+    display: flex; align-items: center; gap: 12px;
+    font-size: 0.85rem; color: var(--text2);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .contact-item:hover { color: var(--gold2); }
+  .contact-icon {
+    width: 34px; height: 34px; border-radius: 1px;
+    border: 0.5px solid var(--border2); background: var(--gold-bg);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem; flex-shrink: 0;
+  }
+
+  /* FORM */
+  .form-wrap {
+    background: var(--bg2);
+    border: 0.5px solid var(--border2);
+    border-radius: 3px;
+    padding: 2rem;
+    position: relative;
+  }
+  .form-wrap::before {
+    content: ''; position: absolute; top: -1px; left: 2rem; right: 2rem;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .form-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 400;
+    color: var(--text); margin-bottom: 1.5rem;
+  }
+  .form-title em { font-style: italic; color: var(--gold2); }
+
+  .form-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.2rem; }
+  .form-label {
+    font-size: 0.62rem; font-weight: 400;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted);
+  }
+  .form-label .req { color: var(--gold); margin-left: 3px; }
+
+  input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+    background: var(--bg3);
+    border: 0.5px solid rgba(184,152,42,0.15);
+    border-radius: 1px;
+    color: var(--text);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem; font-weight: 300;
+    padding: 0.75rem 1rem;
+    outline: none; width: 100%;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  input::placeholder, textarea::placeholder { color: var(--muted2); }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--border3);
+    background: var(--bg4);
+  }
+  select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%237a7568' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; cursor: pointer; }
+  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media(max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+
+  .form-submit {
+    width: 100%; margin-top: 0.5rem;
+    font-size: 0.7rem; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 1rem;
+    background: var(--gold); border: none;
+    color: var(--bg); border-radius: 1px;
+    cursor: pointer; font-family: 'Jost', sans-serif;
+    transition: background 0.2s;
+  }
+  .form-submit:hover { background: var(--gold2); }
+
+  .form-note {
+    font-size: 0.7rem; color: var(--muted2);
+    text-align: center; margin-top: 0.8rem; line-height: 1.5;
+  }
+
+  /* SUCCESS */
+  .form-success {
+    display: none; text-align: center; padding: 2rem 1rem;
+  }
+  .success-icon { font-size: 2rem; margin-bottom: 1rem; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 1.4rem; color: var(--text); margin-bottom: 0.5rem; }
+  .success-sub { font-size: 0.85rem; color: var(--muted); }
+
+  /* PANEL CTA */
+  #panel {
+    padding: 4rem 2.5rem;
+    background: var(--bg2);
+    border-top: 0.5px solid var(--border);
+  }
+  .panel-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 2rem; flex-wrap: wrap;
+  }
+  .panel-text h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; font-weight: 400;
+    margin-bottom: 0.4rem;
+  }
+  .panel-text h3 em { font-style: italic; color: var(--gold2); }
+  .panel-text p { font-size: 0.82rem; color: var(--muted); }
+  .panel-btn {
+    font-size: 0.68rem; font-weight: 400;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.85rem 2rem;
+    border: 0.5px solid var(--border3);
+    color: var(--gold2); background: var(--gold-bg);
+    text-decoration: none; border-radius: 1px;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .panel-btn:hover { background: var(--gold-bg2); border-color: var(--gold3); color: var(--gold3); }
+
+  /* FOOTER */
+  footer {
+    padding: 2.5rem 2.5rem;
+    border-top: 0.5px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .footer-brand {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.95rem; color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .footer-meta {
+    font-size: 0.62rem; font-weight: 300;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted2);
+    text-align: right;
+  }
+  .footer-credit {
+    font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted2); margin-top: 3px;
+  }
+  .footer-credit a { color: var(--gold); text-decoration: none; }
+  .footer-credit a:hover { color: var(--gold2); }
+
+  /* ORNAMENT */
+  .ornament {
+    text-align: center; padding: 2rem 0;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem; color: var(--border2);
+    letter-spacing: 0.5em;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .reveal { opacity:0; transform:translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .revealed { opacity:1; transform:none; }
+
+  @media(max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .hero-right { order: -1; }
+    .qr-img { width: 160px; height: 160px; }
+  }
+  @media(max-width: 640px) {
+    nav { padding: 0 1.2rem; }
+    nav .nav-links .nav-link { display: none; }
+    #hero, #uslugi, #kontakt { padding-left: 1.2rem; padding-right: 1.2rem; }
+    #dlaczego { padding: 4rem 1.2rem; }
+    #panel { padding: 3rem 1.2rem; }
+    footer { padding: 2rem 1.2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <!-- Inline SVG icon — domek z literą -->
+    <svg class="nav-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 18L20 6L34 18V36H26V26H14V36H6V18Z" stroke="#b8982a" stroke-width="1.2" fill="none"/>
+      <circle cx="20" cy="22" r="5" stroke="#b8982a" stroke-width="1" fill="none"/>
+      <path d="M17 22C17 20.3 18.3 19 20 19" stroke="#b8982a" stroke-width="1" stroke-linecap="round"/>
+    </svg>
+    <span class="nav-name">Miłość do Porządku</span>
+  </div>
+  <div class="nav-links">
+    <a href="#uslugi" class="nav-link">Usługi</a>
+    <a href="#dlaczego" class="nav-link">O nas</a>
+    <a href="#kontakt" class="nav-cta">Zamów sprzątanie</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-orb orb-1"></div>
+  <div class="hero-orb orb-2"></div>
+  <div class="hero-line"></div>
+
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-eyebrow">Warszawa i okolice</div>
+      <h1 class="hero-title">
+        Czystość
+        <em>z miłością.</em>
+      </h1>
+      <p class="hero-desc">Profesjonalne sprzątanie mieszkań, biur i przestrzeni komercyjnych. Luiza Niedźwiecka i jej ekipa — dokładnie, punktualnie, z troską o każdy szczegół.</p>
+      <div class="hero-btns">
+        <a href="#kontakt" class="btn btn-gold">Zamów wycenę</a>
+        <a href="#uslugi" class="btn btn-outline">Zobacz usługi</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="qr-frame">
+        <img src="QR_Milosc_do_porzadku_logo_elegant.png" alt="QR Miłość do Porządku" class="qr-img">
+        <div class="qr-label">Zeskanuj i udostępnij<br><span>Miłość do Porządku</span></div>
+      </div>
+      <div class="hero-stat-row">
+        <div class="hero-stat">
+          <span class="stat-num">5★</span>
+          <span class="stat-label">Ocena klientów</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Zadowolenia</span>
+        </div>
+        <div class="hero-stat">
+          <span class="stat-num">24h</span>
+          <span class="stat-label">Odpowiedź</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"><div class="divider-line"></div><div class="divider-ornament">✦ ✦ ✦</div><div class="divider-line"></div></div>
+
+<!-- USŁUGI -->
+<section id="uslugi">
+  <div class="section-eyebrow reveal">Zakres usług</div>
+  <h2 class="section-title reveal">Co robimy<br><em>dla Ciebie.</em></h2>
+
+  <div class="services-grid">
+    <div class="service-card reveal">
+      <span class="service-num">01</span>
+      <div class="service-name">Sprzątanie mieszkań</div>
+      <p class="service-desc">Regularne i jednorazowe czyszczenie mieszkań — od studia po duże apartamenty. Każdy kąt, każda powierzchnia.</p>
+      <div class="service-price">Regularne · Jednorazowe · Przed/po wynajmie</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">02</span>
+      <div class="service-name">Biura i przestrzenie</div>
+      <p class="service-desc">Sprzątanie biur, salonów, gabinetów. Grafiki dostosowane do harmonogramu firmy — codziennie lub tygodniowo.</p>
+      <div class="service-price">Abonament miesięczny · Elastyczny termin</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">03</span>
+      <div class="service-name">Sprzątanie po remoncie</div>
+      <p class="service-desc">Gruntowne czyszczenie po budowie lub remoncie — kurz, gruz, kleje, farby. Zostawiamy gotowe do zamieszkania.</p>
+      <div class="service-price">Wycena indywidualna</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">04</span>
+      <div class="service-name">Pranie tapicerki</div>
+      <p class="service-desc">Profesjonalne pranie kanapy, foteli, materacy i dywanów. Usuwanie plam, odświeżanie, dezynfekcja.</p>
+      <div class="service-price">Wycena od metra / sztuki</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">05</span>
+      <div class="service-name">Mycie okien</div>
+      <p class="service-desc">Czyszczenie okien wewnątrz i na zewnątrz — ramy, parapety, rolety. Bez smug, bez śladów.</p>
+      <div class="service-price">Wycena od liczby okien</div>
+    </div>
+    <div class="service-card reveal">
+      <span class="service-num">06</span>
+      <div class="service-name">Usługi specjalne</div>
+      <p class="service-desc">Sprzątanie po imprezach, przygotowanie nieruchomości do sprzedaży lub wynajmu, odświeżenie całego mieszkania.</p>
+      <div class="service-price">Termin ekspresowy dostępny</div>
+    </div>
+  </div>
+</section>
+
+<div class="divider" style="padding: 0 2.5rem; max-width: 1200px; margin: 0 auto;"><div class="divider-line"></div><div class="divider-ornament">✦</div><div class="divider-line"></div></div>
+
+<!-- DLACZEGO MY -->
+<section id="dlaczego">
+  <div class="dlaczego-inner">
+    <div class="reveal">
+      <div class="section-eyebrow">Dlaczego my</div>
+      <h2 class="section-title" style="font-size: clamp(1.8rem, 3vw, 2.6rem);">Porządek to<br><em>nasz priorytet.</em></h2>
+      <p style="font-size:0.88rem; color:var(--muted); line-height:1.8; margin-top:1rem;">Luiza i jej ekipa pracują z pasją do czystości. Każde zlecenie traktujemy indywidualnie — bo każdy dom jest inny.</p>
+    </div>
+    <div class="features-list reveal">
+      <div class="feature-row">
+        <div class="feature-icon">✓</div>
+        <div><div class="feature-name">Sprawdzona ekipa</div><div class="feature-desc">Pracownicy z referencjami, regularnie weryfikowani. Twój dom w dobrych rękach.</div></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">⏱</div>
+        <div><div class="feature-name">Punktualność</div><div class="feature-desc">Przychodzimy o umówionej godzinie. Szanujemy Twój czas.</div></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">🌿</div>
+        <div><div class="feature-name">Bezpieczne środki</div><div class="feature-desc">Profesjonalne preparaty bezpieczne dla dzieci, zwierząt i alergików.</div></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">📋</div>
+        <div><div class="feature-name">Stała cena</div><div class="feature-desc">Wycena przed realizacją — bez niespodzianek na koniec. Transparentność w każdym zleceniu.</div></div>
+      </div>
+      <div class="feature-row">
+        <div class="feature-icon">♻</div>
+        <div><div class="feature-name">Gwarancja czystości</div><div class="feature-desc">Jeśli coś nie spełni oczekiwań — wrócimy i poprawimy. Bezpłatnie.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- KONTAKT -->
+<section id="kontakt">
+  <div class="kontakt-grid">
+    <div class="kontakt-left reveal">
+      <div class="section-eyebrow">Kontakt</div>
+      <h2 class="section-title">Zamów<br><em>wycenę.</em></h2>
+      <p>Wypełnij formularz lub napisz bezpośrednio. Odpowiadam zazwyczaj tego samego dnia.</p>
+      <div class="contact-info">
+        <a href="mailto:luizaniedzwiecka1@gmail.com" class="contact-item">
+          <div class="contact-icon">✉</div>
+          luizaniedzwiecka1@gmail.com
+        </a>
+        <a href="tel:+48000000000" class="contact-item">
+          <div class="contact-icon">☎</div>
+          +48 — — — — — — —
+        </a>
+        <div class="contact-item" style="cursor:default;">
+          <div class="contact-icon">📍</div>
+          Warszawa i okolice
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="form-wrap" id="form-wrap">
+        <div class="form-title">Napisz do <em>Luizy</em></div>
+        <div class="form-row">
+          <div class="form-field">
+            <label class="form-label">Imię<span class="req">*</span></label>
+            <input type="text" id="f-imie" placeholder="Twoje imię">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Telefon</label>
+            <input type="tel" id="f-tel" placeholder="+48 000 000 000">
+          </div>
+        </div>
+        <div class="form-field">
+          <label class="form-label">E-mail<span class="req">*</span></label>
+          <input type="email" id="f-email" placeholder="twoj@email.pl">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Rodzaj usługi</label>
+          <select id="f-usluga">
+            <option value="">— Wybierz —</option>
+            <option>Sprzątanie mieszkania — regularne</option>
+            <option>Sprzątanie mieszkania — jednorazowe</option>
+            <option>Biuro / przestrzeń komercyjna</option>
+            <option>Sprzątanie po remoncie</option>
+            <option>Pranie tapicerki</option>
+            <option>Mycie okien</option>
+            <option>Usługa specjalna</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Wiadomość</label>
+          <textarea id="f-msg" placeholder="Opisz czego potrzebujesz — metraż, lokalizacja, preferowany termin..."></textarea>
+        </div>
+        <button class="form-submit" onclick="sendForm()">Wyślij zapytanie →</button>
+        <p class="form-note">Odpowiem w ciągu 24 godzin · Wycena bezpłatna</p>
+      </div>
+      <div class="form-success" id="form-success">
+        <div class="success-icon">✦</div>
+        <div class="success-title">Wiadomość wysłana.</div>
+        <p class="success-sub">Luiza odezwie się do Ciebie wkrótce. Dziękujemy za zaufanie!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PANEL CTA -->
+<section id="panel">
+  <div class="panel-inner">
+    <div class="panel-text reveal">
+      <h3>Panel <em>zarządzania</em></h3>
+      <p>Dostęp do systemu operacyjnego Miłości do Porządku — zlecenia, klienci, ekipa.</p>
+    </div>
+    <a href="SprzątApka/index.html" class="panel-btn reveal">Wejdź do panelu →</a>
+  </div>
+</section>
+
+<div class="ornament">✦</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
+      <path d="M6 18L20 6L34 18V36H26V26H14V36H6V18Z" stroke="#b8982a" stroke-width="1.2" fill="none"/>
+      <circle cx="20" cy="22" r="5" stroke="#b8982a" stroke-width="1" fill="none"/>
+    </svg>
+    Miłość do Porządku
+  </div>
+  <div class="footer-meta">
+    Luiza Niedźwiecka · Warszawa · 2025
+    <div class="footer-credit">Projekt: <a href="https://alpocket.cool" target="_blank" rel="noopener noreferrer">alpocket.cool</a></div>
+  </div>
+</footer>
+
+<script>
+  // Reveal
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('revealed'), i * 80);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  // Form
+  function sendForm() {
+    const imie = document.getElementById('f-imie').value.trim();
+    const email = document.getElementById('f-email').value.trim();
+    if (!imie || !email) {
+      if (!imie) document.getElementById('f-imie').style.borderColor = 'rgba(184,152,42,0.5)';
+      if (!email) document.getElementById('f-email').style.borderColor = 'rgba(184,152,42,0.5)';
+      return;
+    }
+    const tel = document.getElementById('f-tel').value;
+    const usluga = document.getElementById('f-usluga').value;
+    const msg = document.getElementById('f-msg').value;
+    const body = encodeURIComponent(
+      `Imię: ${imie}\nTelefon: ${tel || '—'}\nE-mail: ${email}\nUsługa: ${usluga || '—'}\n\nWiadomość:\n${msg}`
+    );
+    const subject = encodeURIComponent('Zapytanie o wycenę — Miłość do Porządku');
+    window.location.href = `mailto:luizaniedzwiecka1@gmail.com?subject=${subject}&body=${body}`;
+    document.getElementById('form-wrap').style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+
+  // Smooth scroll
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      e.preventDefault();
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>

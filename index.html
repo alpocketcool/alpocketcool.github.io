@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>alpocket.cool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #09090a; --bg2: #101013; --bg3: #17171b; --bg4: #1d1d22;
+    --border: rgba(255,255,255,0.06); --border2: rgba(255,255,255,0.11); --border3: rgba(255,255,255,0.18);
+    --text: #eeebe5; --text2: #c8c4bc; --muted: #7a7772; --muted2: #4e4c49;
+    --accent: #c9b99a; --accent2: #e6d3b2; --accent3: #f2e8d0; --gold: #b8982a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; font-weight: 300; line-height: 1.6; overflow-x: hidden; }
+
+  body::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; opacity: 0.018; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  .grid-bg {
+    position: absolute; inset: 0; z-index: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.022) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.022) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 0%, transparent 100%);
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    height: 52px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2.5rem;
+    background: rgba(9,9,10,0.88); backdrop-filter: blur(16px);
+    border-bottom: 0.5px solid var(--border);
+  }
+  .nav-logo { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 600; color: var(--accent2); text-decoration: none; letter-spacing: 0.02em; }
+  .nav-right { display: flex; align-items: center; gap: 2rem; }
+  .nav-link { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .nav-link:hover { color: var(--accent2); }
+  .nav-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 8px rgba(184,152,42,0.6); animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.7)} }
+
+  /* HERO */
+  #hero {
+    min-height: 100vh; display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 0 2.5rem 4rem; position: relative; overflow: hidden;
+  }
+  .hero-glow { position: absolute; border-radius: 50%; filter: blur(120px); pointer-events: none; }
+  .glow-1 { width: 600px; height: 400px; background: radial-gradient(ellipse, rgba(200,184,154,0.06) 0%, transparent 70%); top: 10%; left: -10%; }
+  .glow-2 { width: 400px; height: 300px; background: radial-gradient(ellipse, rgba(184,152,42,0.04) 0%, transparent 70%); top: 30%; right: 5%; }
+
+  .hero-inner { position: relative; z-index: 1; max-width: 1100px; }
+
+  .hero-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.8rem; display: flex; align-items: center; gap: 14px; opacity: 0; animation: fadeUp 0.8s 0.2s forwards; }
+  .hero-label::before { content: ''; display: block; width: 36px; height: 0.5px; background: var(--accent); }
+
+  .hero-title { font-family: 'Playfair Display', serif; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 700; line-height: 1.0; letter-spacing: -0.02em; margin-bottom: 0.15em; opacity: 0; animation: fadeUp 0.9s 0.35s forwards; }
+  .hero-title em { font-style: italic; color: var(--accent2); display: block; }
+
+  .hero-sub { font-size: clamp(0.95rem, 1.5vw, 1.1rem); color: var(--muted); max-width: 480px; margin: 1.8rem 0 3rem; font-weight: 300; line-height: 1.7; opacity: 0; animation: fadeUp 0.9s 0.5s forwards; }
+
+  .hero-meta { display: flex; gap: 3rem; flex-wrap: wrap; opacity: 0; animation: fadeUp 0.9s 0.65s forwards; }
+  .meta-item { display: flex; flex-direction: column; gap: 4px; }
+  .meta-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--accent2); line-height: 1; }
+  .meta-key { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted2); }
+
+  .scroll-hint { position: absolute; bottom: 2.5rem; right: 2.5rem; font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted2); display: flex; align-items: center; gap: 10px; writing-mode: vertical-rl; opacity: 0; animation: fadeIn 1s 1.2s forwards; }
+  .scroll-hint::after { content: ''; display: block; width: 0.5px; height: 48px; background: linear-gradient(to bottom, var(--muted2), transparent); }
+
+  /* PROJECTS */
+  #projects { padding: 6rem 2.5rem; position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; }
+
+  .section-head { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 3rem; flex-wrap: wrap; gap: 1rem; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.6rem; display: flex; align-items: center; gap: 10px; }
+  .section-label::before { content: ''; display: block; width: 20px; height: 0.5px; background: var(--accent); }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700; line-height: 1.15; }
+  .section-count { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); align-self: flex-end; padding-bottom: 0.3rem; }
+
+  .filter-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 2.5rem; }
+  .filter-btn { font-family: 'DM Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 5px 14px; border-radius: 1px; border: 0.5px solid var(--border2); background: transparent; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .filter-btn.active { border-color: var(--accent); background: rgba(201,185,154,0.08); color: var(--accent2); }
+
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1px; background: var(--border); border: 0.5px solid var(--border); border-radius: 2px; overflow: hidden; }
+
+  .project-card { background: var(--bg2); padding: 2rem 2rem 1.8rem; display: flex; flex-direction: column; text-decoration: none; position: relative; overflow: hidden; transition: background 0.25s; min-height: 240px; }
+  .project-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(201,185,154,0.04) 0%, transparent 60%); opacity: 0; transition: opacity 0.3s; }
+  .project-card:hover { background: var(--bg3); }
+  .project-card:hover::before { opacity: 1; }
+  .project-card::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); transition: width 0.4s ease; }
+  .project-card:hover::after { width: 100%; }
+
+  .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.4rem; }
+  .card-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .tag { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 1px; border: 0.5px solid; }
+  .tag-klient { color: #4a9e6e; border-color: #4a9e6e; background: rgba(74,158,110,0.07); }
+  .tag-wlasny { color: var(--accent); border-color: var(--accent); background: rgba(201,185,154,0.07); }
+  .tag-tool { color: #4a7ec4; border-color: #4a7ec4; background: rgba(74,126,196,0.07); }
+  .tag-wip { color: #c49a3c; border-color: #c49a3c; background: rgba(196,154,60,0.07); }
+  .card-num { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--muted2); }
+
+  .card-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; line-height: 1.2; color: var(--text); margin-bottom: 0.5rem; transition: color 0.2s; }
+  .project-card:hover .card-title { color: var(--accent2); }
+  .card-subtitle { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted2); margin-bottom: 0.9rem; }
+  .card-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.6; flex: 1; }
+
+  .card-bottom { display: flex; justify-content: space-between; align-items: center; margin-top: 1.6rem; padding-top: 1.2rem; border-top: 0.5px solid var(--border); }
+  .card-date { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); }
+  .card-arrow { font-size: 0.75rem; color: var(--muted2); transition: all 0.25s; }
+  .project-card:hover .card-arrow { color: var(--accent2); transform: translateX(4px); }
+  .card-arrow-wip { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); }
+
+  /* ABOUT */
+  #about { padding: 6rem 2.5rem; max-width: 1400px; margin: 0 auto; border-top: 0.5px solid var(--border); position: relative; z-index: 1; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  @media(max-width: 768px) { .about-grid { grid-template-columns: 1fr; gap: 2rem; } }
+  .about-left h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem); font-weight: 700; line-height: 1.15; margin-bottom: 1.2rem; }
+  .about-left h2 em { font-style: italic; color: var(--accent2); }
+  .about-left p { font-size: 0.92rem; color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+  .service-row { background: var(--bg2); border: 0.5px solid var(--border); border-radius: 1px; padding: 1.2rem 1.5rem; display: flex; align-items: flex-start; gap: 1rem; transition: background 0.2s, border-color 0.2s; margin-bottom: 1px; }
+  .service-row:hover { background: var(--bg3); border-color: var(--border2); }
+  .service-icon { font-size: 1rem; opacity: 0.4; flex-shrink: 0; margin-top: 3px; }
+  .service-name { font-size: 0.88rem; font-weight: 500; color: var(--text2); margin-bottom: 3px; }
+  .service-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+  /* CONTACT */
+  #contact { padding: 5rem 2.5rem; max-width: 1400px; margin: 0 auto; border-top: 0.5px solid var(--border); position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; text-align: center; }
+  #contact h2 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 700; margin-bottom: 1rem; }
+  #contact h2 em { font-style: italic; color: var(--accent2); }
+  #contact p { font-size: 0.9rem; color: var(--muted); max-width: 420px; margin-bottom: 2.5rem; line-height: 1.7; }
+  .contact-links { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+  .contact-btn { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.85rem 2rem; border-radius: 1px; text-decoration: none; transition: all 0.2s; border: 0.5px solid; }
+  .btn-primary-c { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+  .btn-primary-c:hover { background: var(--accent2); border-color: var(--accent2); }
+  .btn-ghost-c { background: transparent; color: var(--muted); border-color: var(--border2); }
+  .btn-ghost-c:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* FOOTER */
+  footer { padding: 2rem 2.5rem; border-top: 0.5px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; position: relative; z-index: 1; }
+  .footer-logo { font-family: 'Playfair Display', serif; font-size: 0.85rem; color: var(--muted); }
+  .footer-right { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); }
+
+  /* PROTOKOLY */
+  #protokoly { padding: 6rem 2.5rem; max-width: 1400px; margin: 0 auto; border-top: 0.5px solid var(--border); position: relative; z-index: 1; }
+  .protokoly-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1px; background: var(--border); border: 0.5px solid var(--border); border-radius: 2px; overflow: hidden; margin-top: 3rem; }
+  .protokol-card { background: var(--bg2); padding: 2.2rem 2rem; display: flex; flex-direction: column; position: relative; overflow: hidden; transition: background 0.25s; }
+  .protokol-card::after { content: ''; position: absolute; top: 0; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); transition: width 0.4s ease; }
+  .protokol-card:hover { background: var(--bg3); }
+  .protokol-card:hover::after { width: 100%; }
+  .protokol-card.featured { background: var(--bg3); }
+  .protokol-card.featured::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(201,185,154,0.05) 0%, transparent 60%); pointer-events: none; }
+  .protokol-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.8rem; }
+  .protokol-name { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent2); }
+  .protokol-status { font-family: 'DM Mono', monospace; font-size: 0.58rem; letter-spacing: 0.12em; text-transform: uppercase; padding: 3px 9px; border-radius: 1px; border: 0.5px solid; }
+  .status-ready { color: #4a9e6e; border-color: #4a9e6e; background: rgba(74,158,110,0.08); }
+  .status-active { color: var(--accent); border-color: var(--accent); background: rgba(201,185,154,0.08); }
+  .status-standby { color: var(--muted); border-color: var(--muted2); background: transparent; }
+  .protokol-price { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--accent2); line-height: 1; margin-bottom: 0.3rem; }
+  .protokol-price-note { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted2); margin-bottom: 1.5rem; }
+  .protokol-desc { font-size: 0.84rem; color: var(--muted); line-height: 1.7; flex: 1; }
+  .protokol-features { margin-top: 1.2rem; display: flex; flex-direction: column; gap: 6px; }
+  .protokol-feature { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.06em; color: var(--muted2); display: flex; gap: 8px; }
+  .protokol-feature::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+  .protokol-cta { margin-top: 2rem; padding-top: 1.4rem; border-top: 0.5px solid var(--border); }
+  .protokol-btn { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.75rem 1.5rem; border-radius: 1px; text-decoration: none; transition: all 0.2s; border: 0.5px solid; display: inline-block; cursor: pointer; background: none; }
+  .protokol-btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); font-weight: 500; }
+  .protokol-btn-primary:hover { background: var(--accent2); border-color: var(--accent2); }
+  .protokol-btn-ghost { color: var(--muted); border-color: var(--border2); }
+  .protokol-btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+  @media(max-width:640px) { #protokoly { padding: 4rem 1.2rem; } }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  .reveal { opacity:0; transform:translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .revealed { opacity:1; transform:none; }
+  .project-card.hidden { display: none; }
+
+  @media(max-width:640px) {
+    nav { padding: 0 1.2rem; }
+    #hero { padding: 0 1.2rem 3rem; }
+    #projects, #about, #contact { padding: 4rem 1.2rem; }
+    .projects-grid { grid-template-columns: 1fr; }
+    footer { padding: 1.5rem 1.2rem; }
+    .nav-right .nav-link { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-logo">alpocket.cool</a>
+  <div class="nav-right">
+    <a href="#projects" class="nav-link">Projekty</a>
+    <a href="#about" class="nav-link">Studio</a>
+    <a href="#protokoly" class="nav-link">Oferta</a>
+    <a href="#contact" class="nav-link">Kontakt</a>
+    <div class="nav-dot" title="Dostępny"></div>
+  </div>
+</nav>
+
+<section id="hero">
+  <div class="grid-bg"></div>
+  <div class="hero-glow glow-1"></div>
+  <div class="hero-glow glow-2"></div>
+  <div class="hero-inner">
+    <div class="hero-label">Design & Development Studio · Warszawa</div>
+    <h1 class="hero-title">Daniel Wilk<em>alpocket.cool</em></h1>
+    <p class="hero-sub">Projektowanie i budowanie produktów cyfrowych — strony, aplikacje, systemy brandingowe. Od konceptu do kodu.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-num">6+</span><span class="meta-key">Projektów</span></div>
+      <div class="meta-item"><span class="meta-num">3</span><span class="meta-key">Aktywni klienci</span></div>
+      <div class="meta-item"><span class="meta-num">2025</span><span class="meta-key">W budowie</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<section id="projects">
+  <div class="section-head reveal">
+    <div>
+      <div class="section-label">Wybrane prace</div>
+      <h2 class="section-title">Projekty</h2>
+    </div>
+    <div class="section-count" id="proj-count">6 projektów</div>
+  </div>
+
+  <div class="filter-row reveal">
+    <button class="filter-btn active" data-filter="all">Wszystkie</button>
+    <button class="filter-btn" data-filter="klient">Klienci</button>
+    <button class="filter-btn" data-filter="wlasny">Własne</button>
+    <button class="filter-btn" data-filter="tool">Narzędzia</button>
+  </div>
+
+  <div class="projects-grid">
+
+    <a href="wallstory-bizplan.html" class="project-card reveal" data-category="wlasny">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-wlasny">Własny</span><span class="tag tag-wip">WIP</span></div><span class="card-num">01</span></div>
+      <div class="card-title">WallStory</div>
+      <div class="card-subtitle">Branded Interior · Business Plan</div>
+      <p class="card-desc">System wielkoformatowych grafik narracyjnych dla przestrzeni komercyjnych. Ściany jako opowieść firmy. Analiza rynku, sektory, ekonomia realizacji.</p>
+      <div class="card-bottom"><span class="card-date">Maj 2025</span><span class="card-arrow">Otwórz dokument →</span></div>
+    </a>
+
+    <a href="4matka.html" class="project-card reveal" data-category="tool">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-tool">Narzędzie</span><span class="tag tag-wlasny">alpocket</span></div><span class="card-num">02</span></div>
+      <div class="card-title">4Matka</div>
+      <div class="card-subtitle">System zapytań ofertowych</div>
+      <p class="card-desc">Formularz zapytania ofertowego dla wykonawców i audytorów branży branded interior. Wycena + audyt przestrzeni w jednym 4-krokowym interfejsie.</p>
+      <div class="card-bottom"><span class="card-date">Maj 2025</span><span class="card-arrow">Otwórz formularz →</span></div>
+    </a>
+
+    <div class="project-card reveal" data-category="klient" style="cursor:default;">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-klient">Klient</span></div><span class="card-num">03</span></div>
+      <div class="card-title">No Problem</div>
+      <div class="card-subtitle">Anna Kondrat · Ubezpieczenia</div>
+      <p class="card-desc">Pełny system identyfikacji wizualnej agencji ubezpieczeniowej — vCard landing page, wizytówki (3 warianty), logo, system druku. Cormorant Garamond + złoto.</p>
+      <div class="card-bottom"><span class="card-date">2024–2025</span><span class="card-arrow-wip">Projekt zamknięty</span></div>
+    </div>
+
+    <a href="SprzątApka/index.html" class="project-card reveal" data-category="klient">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-klient">Klient</span><span class="tag tag-tool">PWA</span></div><span class="card-num">04</span></div>
+      <div class="card-title">CleanOps</div>
+      <div class="card-subtitle">Luiza Niedźwiecka · Sprzątanie</div>
+      <p class="card-desc">Progresywna aplikacja webowa do zarządzania zleceniami, klientami i ekipą firmy sprzątającej. Indigo + dusty rose, UI zoptymalizowany na pracę w rękawiczkach.</p>
+      <div class="card-bottom"><span class="card-date">2025</span><span class="card-arrow">Otwórz aplikację →</span></div>
+    </a>
+
+    <a href="clock.html" class="project-card reveal" data-category="tool">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-tool">Narzędzie</span></div><span class="card-num">05</span></div>
+      <div class="card-title">Clock</div>
+      <div class="card-subtitle">Zegar · Eksperyment</div>
+      <p class="card-desc">Minimalistyczny zegar przeglądarkowy. Jeden z pierwszych eksperymentów w systemie alpocket — forma ponad funkcją.</p>
+      <div class="card-bottom"><span class="card-date">2025</span><span class="card-arrow">Otwórz →</span></div>
+    </a>
+
+    <a href="lidia.html" class="project-card reveal" data-category="wlasny">
+      <div class="card-top"><div class="card-tags"><span class="tag tag-wlasny">Osobisty</span></div><span class="card-num">06</span></div>
+      <div class="card-title">Lidia</div>
+      <div class="card-subtitle">Projekt osobisty</div>
+      <p class="card-desc">Dedykowana strona osobista w systemie alpocket.cool — projekt cyfrowy z charakterem.</p>
+      <div class="card-bottom"><span class="card-date">2025</span><span class="card-arrow">Otwórz →</span></div>
+    </a>
+
+  </div>
+</section>
+
+<section id="about">
+  <div class="about-grid">
+    <div class="about-left reveal">
+      <div class="section-label">Studio</div>
+      <h2>Design który<br><em>dowozi.</em></h2>
+      <p>alpocket.cool to niezależne studio projektowe na styku designu i developmentu. Buduję produkty cyfrowe — od identyfikacji wizualnej przez landing pages po aplikacje webowe.</p>
+      <p>Każdy projekt żyje jako dokument w przeglądarce. Bez Figmy do wysyłki — działający kod od pierwszego dnia.</p>
+    </div>
+    <div class="about-right reveal">
+      <div class="service-row"><span class="service-icon">◈</span><div><div class="service-name">Identyfikacja wizualna</div><div class="service-desc">Logo, system brandingowy, materiały drukowane. Od konceptu do gotowych plików.</div></div></div>
+      <div class="service-row"><span class="service-icon">◉</span><div><div class="service-name">Strony & landing pages</div><div class="service-desc">Responsywne, szybkie, bez zbędnych zależności. HTML/CSS/JS lub React.</div></div></div>
+      <div class="service-row"><span class="service-icon">◫</span><div><div class="service-name">Aplikacje webowe</div><div class="service-desc">PWA, narzędzia wewnętrzne, prototypy z gotową ścieżką do produkcji.</div></div></div>
+      <div class="service-row"><span class="service-icon">◬</span><div><div class="service-name">Branded interior</div><div class="service-desc">Projekt systemów graficznych dla przestrzeni komercyjnych — WallStory.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROTOKOLY WDROZENIOWE -->
+<section id="protokoly">
+  <div class="section-head reveal">
+    <div>
+      <div class="section-label">Oferta</div>
+      <h2 class="section-title">Protokoły<br><em style="font-style:italic;color:var(--accent2)">wdrożeniowe.</em></h2>
+    </div>
+    <div class="section-count">Czas · Jakość · Wynik</div>
+  </div>
+
+  <div class="protokoly-grid">
+
+    <div class="protokol-card reveal">
+      <div class="protokol-header">
+        <span class="protokol-name">[PROTOCOL: 24H]</span>
+        <span class="protokol-status status-ready">READY</span>
+      </div>
+      <div class="protokol-price">2 000</div>
+      <div class="protokol-price-note">PLN netto · jedna płatność</div>
+      <p class="protokol-desc">Budowa i wdrożenie wizytówki w 24 godziny. Surowy design, pełna optymalizacja — gotowe zanim konkurencja wstanie od biurka.</p>
+      <div class="protokol-features">
+        <span class="protokol-feature">Projekt + kod w 24h</span>
+        <span class="protokol-feature">Mobile-first, bez frameworków</span>
+        <span class="protokol-feature">Deploy na Vercel / GitHub Pages</span>
+        <span class="protokol-feature">1 runda poprawek</span>
+      </div>
+      <div class="protokol-cta">
+        <a href="mailto:kontakt@alpocket.cool?subject=PROTOCOL 24H" class="protokol-btn protokol-btn-ghost">Zamów →</a>
+      </div>
+    </div>
+
+    <div class="protokol-card featured reveal">
+      <div class="protokol-header">
+        <span class="protokol-name">[PROTOCOL: 48H]</span>
+        <span class="protokol-status status-active">ACTIVE</span>
+      </div>
+      <div class="protokol-price">4 500</div>
+      <div class="protokol-price-note">PLN netto · zaliczka 40%</div>
+      <p class="protokol-desc">Pełny system wizualny do 5 podstron z integracją WhatsApp Business. Wdrożenie w dwie doby — identyfikacja, treść, kontakt, gotowe.</p>
+      <div class="protokol-features">
+        <span class="protokol-feature">Do 5 podstron</span>
+        <span class="protokol-feature">WhatsApp Business widget</span>
+        <span class="protokol-feature">System identyfikacji wizualnej</span>
+        <span class="protokol-feature">SEO podstawowe + meta</span>
+        <span class="protokol-feature">2 rundy poprawek</span>
+      </div>
+      <div class="protokol-cta">
+        <a href="mailto:kontakt@alpocket.cool?subject=PROTOCOL 48H" class="protokol-btn protokol-btn-primary">Zamów →</a>
+      </div>
+    </div>
+
+    <div class="protokol-card reveal">
+      <div class="protokol-header">
+        <span class="protokol-name">[SYSTEM: CUSTOM]</span>
+        <span class="protokol-status status-standby">STANDBY</span>
+      </div>
+      <div class="protokol-price" style="font-size:1.5rem;line-height:1.2;padding-top:0.3rem;">Wycena<br>indywidualna</div>
+      <div class="protokol-price-note">Brief → estymacja → kontrakt</div>
+      <p class="protokol-desc">Aplikacje, systemy brandingowe, PWA, dashboardy. Architektura dopasowana do skali projektu — od landing po pełny produkt cyfrowy.</p>
+      <div class="protokol-features">
+        <span class="protokol-feature">Aplikacje webowe i PWA</span>
+        <span class="protokol-feature">Systemy wielostronicowe</span>
+        <span class="protokol-feature">Integracje zewnętrzne</span>
+        <span class="protokol-feature">Opieka po wdrożeniu</span>
+      </div>
+      <div class="protokol-cta">
+        <a href="mailto:kontakt@alpocket.cool?subject=SYSTEM CUSTOM — brief" class="protokol-btn protokol-btn-ghost">Wyślij brief →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-label reveal" style="margin-bottom:1rem;">Kontakt</div>
+  <h2 class="reveal">Porozmawiajmy<br>o <em>projekcie.</em></h2>
+  <p class="reveal">Nowe zlecenia, współpraca, pytania — odpowiadam szybko.</p>
+  <div class="contact-links reveal">
+    <a href="mailto:kontakt@alpocket.cool" class="contact-btn btn-primary-c">kontakt@alpocket.cool</a>
+    <a href="https://github.com/danielwilkvilo-lgtm" target="_blank" rel="noopener noreferrer" class="contact-btn btn-ghost-c">GitHub</a>
+  </div>
+</section>
+
+<footer>
+  <span class="footer-logo">alpocket.cool</span>
+  <span class="footer-right">Daniel Wilk · Warszawa · 2025</span>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('revealed'), i * 60);
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      let visible = 0;
+      document.querySelectorAll('.project-card').forEach(card => {
+        const show = f === 'all' || card.dataset.category === f;
+        card.classList.toggle('hidden', !show);
+        if (show) visible++;
+      });
+      const c = document.getElementById('proj-count');
+      c.textContent = visible + (visible === 1 ? ' projekt' : visible < 5 ? ' projekty' : ' projektów');
+    });
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const id = a.getAttribute('href');
+      if (id === '#') return;
+      e.preventDefault();
+      document.querySelector(id)?.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</body>
+</html>
